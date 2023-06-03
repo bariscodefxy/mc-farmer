@@ -23,6 +23,8 @@ let cropType = 'wheat_seeds'
 let seedName = 'wheat_seeds';
 let harvestName = 'wheat';
 
+let lastMsg = '';
+
 let expansion = 0;
 let snackTime = false;
 
@@ -59,11 +61,12 @@ bot.once('spawn', async ()=>{
 	mainLoop();
 });
 
-bot.on('chat', async (username, message)=>{
-	console.log(msg.toString())
-	let tokens = message.split(' ');
-
-	switch(tokens[0]) {
+bot.on('message', async (username, message)=>{
+	const line = await readLineAsync();
+	let tokens = line.split(' ');
+	
+	switch(line)
+	{
 		case 'bed':
 			bedPosition = vec3(parseInt(tokens[1]), parseInt(tokens[2]), parseInt(tokens[3]));
 			break;
@@ -96,8 +99,8 @@ bot.on('chat', async (username, message)=>{
 			break;
 	}
 	
-	const line = await readLineAsync();
-	bot.chat(line);
+	if (line != lastMsg)
+		bot.chat(line);
 });
 
 async function mainLoop() {
