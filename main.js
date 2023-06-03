@@ -1,6 +1,21 @@
 const mineflayer = require('mineflayer');
 const pathfinder = require("./pathfinder.js");
 const vec3 = require('vec3');
+const readline = require('readline');
+
+const readLineAsync = () => {
+  const rl = readline.createInterface({
+    input: process.stdin
+  });
+
+  return new Promise((resolve) => {
+    rl.prompt();
+    rl.on('line', (line) => {
+      rl.close();
+      resolve(line);
+    });
+  });
+};
 
 const BED_TIME = 12000;
 
@@ -45,6 +60,7 @@ bot.once('spawn', async ()=>{
 });
 
 bot.on('chat', async (username, message)=>{
+	console.log(msg.toString())
 	let tokens = message.split(' ');
 
 	switch(tokens[0]) {
@@ -79,6 +95,9 @@ bot.on('chat', async (username, message)=>{
 			mainLoop();
 			break;
 	}
+	
+	const line = await readLineAsync();
+	bot.chat(line);
 });
 
 async function mainLoop() {
