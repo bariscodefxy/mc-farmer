@@ -17,6 +17,7 @@ const readLineAsync = () => {
   });
 };
 
+const BED_ALLOWED = true;
 const BED_TIME = 12000;
 
 let cropType = 'wheat_seeds'
@@ -44,7 +45,7 @@ bot.on('error', err => console.log(err));
 
 bot.once('spawn', async ()=>{
 	mcData = require('minecraft-data')(bot.version);
-	bot.chat(`I'm a happy little robot. (${bot.game.gameMode})`);
+	//bot.chat(`I'm a happy little robot. (${bot.game.gameMode})`);
 
 	let farmBlocks = bot.findBlock({
 		matching: (block)=>{
@@ -97,15 +98,16 @@ bot.on('message', async (username, message)=>{
 			await startFarm();
 			mainLoop();
 			break;
+		default:
+			if (line != lastMsg)
+				bot.chat(line);
+			break;
 	}
-	
-	if (line != lastMsg)
-		bot.chat(line);
 });
 
 async function mainLoop() {
 	while (true) {
-		if (bot.time.timeOfDay > BED_TIME) await sleepInBed();
+		if (BED_ALLOWED && bot.time.timeOfDay > BED_TIME) await sleepInBed();
 		if (bot.inventory.slots.filter(v=>v==null).length < 11) await depositLoop();
 		if (bot.food <= 10 || snackTime) await takeSnackBreak();
 		
